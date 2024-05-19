@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <div id="app" class="container">
+        <h2 class="title">Todo List</h2>
+        <div class="input-group">
+            <input type="text" class="content" id="newTodo">
+            <button class="btn">新增</button>
+        </div>
+        <div class="list">
+            <ul id="todo-list">
+            </ul>
+        </div>
+    </div>
+    <script>
+        var todoData = [];
+
+        var addTodo = document.querySelector('.btn');//按钮
+        var todoList = document.getElementById('todo-list');//获取ul
+        var close = document.querySelector('.close');//关闭按钮
+
+        //新增按钮
+        function addNewTodo() {
+            //获取input的内容
+            if (document.getElementById('newTodo').value.trim() != '') {
+                todoData.push({
+                    id: Math.floor(Date.now()),//时间戳
+                    title: document.getElementById('newTodo').value,
+                    completed: true
+                });
+                //渲染新的li
+                render();
+            }
+        };
+
+        //将todoData中的数据渲染出来
+        function render() {
+            var str = '';
+            todoData.forEach(function (item) {
+                str += `
+    <li class="item">
+       <div class="flex">
+           <input type="checkbox" class="item-check">
+           <p class="item-content">${item.title}</p>
+           <span class="close">x</span><!-- uusx -->
+       </div>
+    </li>
+       `;
+            });
+            todoList.innerHTML = str;
+        };
+
+
+        function deleteTodo(event) {
+            if (event.target.classList.contains('close')) {
+                //首先获取关闭按钮元素
+                var close = event.target;
+                //获取close兄弟元素的内容
+                var content = close.previousElementSibling.textContent;
+                //查找要删除元素的下标
+                var index = todoData.findIndex(item => item.title === content);
+                //删除该指定元素
+                todoData.splice(index, 1);
+                //渲染li
+                render();
+            }
+        }
+
+
+        addTodo.addEventListener('click', addNewTodo);
+        todoList.addEventListener('click', deleteTodo)
+    </script>
+</body>
+<style>
+    /* html{
+    height: 100%;
+} */
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* height: 100%; */
+        height: 100vh;
+
+    }
+
+    .container {
+        width: 400px;
+        height: 400px;
+        background: linear-gradient(#da4453, #89216b);
+    }
+
+    .title {
+        text-align: center;
+        margin: 10px;
+    }
+
+    .input-group {
+        display: flex;
+    }
+
+    .label {
+        /* 上右下左 */
+        padding: 5px 10px;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        margin-left: 10px;
+    }
+
+    .content {
+        flex: 1;
+    }
+
+    .item:nth-child(1) {
+        margin-top: 20px;
+    }
+
+    .item {
+        border-bottom: 1px solid #eee;
+    }
+
+    .flex {
+        display: flex;
+        width: 90%;
+        /* m0-a */
+        margin: 0 auto;
+        align-items: center;
+    }
+
+    .item-check {
+        margin-right: 20px;
+    }
+
+    .item-content {
+        flex: 13;
+    }
+
+    .close {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #aaa;
+        font-size: 20px;
+        text-align: center;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+</style>
+
+</html>
